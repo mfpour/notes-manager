@@ -5,6 +5,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .serializers import RegisterSerializer
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
 
 
 @api_view(["POST"])
@@ -33,11 +37,12 @@ def login_view(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    login(request, user)
+    refresh = RefreshToken.for_user(user)
 
     return Response(
         {
-            "message": "Login successful",
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
             "user": {
                 "id": user.id,
                 "username": user.username,
@@ -48,8 +53,23 @@ def login_view(request):
         }
     )
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def csrf(request):
+    return Response({"message": "CSRF cookie set"})
+
 
 @api_view(["POST"])
 def logout_view(request):
-    logout(request)
-    return Response({"message": "Logout successful"})
+    try:
+        refresh_token = request.data["refresh"]
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response({"message": "Logout successful"})
+    except Exception:
+        return Response(
+            {"message": "Logout failed"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )

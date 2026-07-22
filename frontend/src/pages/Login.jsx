@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 function Login() {
@@ -25,7 +25,10 @@ function Login() {
     setError("");
 
     try {
-      await api.post("/accounts/login/", form);
+      const response = await api.post("/accounts/login/", form);
+
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
 
       navigate("/dashboard");
     } catch {
@@ -66,10 +69,7 @@ function Login() {
       {error && <p>{error}</p>}
 
       <p>
-        Don't have an account?{" "}
-        <Link to="/register">
-          Register
-        </Link>
+        Don't have an account? <Link to="/register">Register</Link>
       </p>
     </div>
   );
