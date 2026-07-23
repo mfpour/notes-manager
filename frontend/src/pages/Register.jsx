@@ -36,70 +36,62 @@ function Register() {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Register</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+          />
 
-        <br />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        />
+          <input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={form.first_name}
+            onChange={handleChange}
+          />
 
-        <br />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={form.last_name}
+            onChange={handleChange}
+          />
 
-        <input
-          type="text"
-          name="first_name"
-          placeholder="First Name"
-          value={form.first_name}
-          onChange={handleChange}
-        />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+          />
 
-        <br />
+          <button type="submit">
+            Register
+          </button>
+        </form>
 
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Last Name"
-          value={form.last_name}
-          onChange={handleChange}
-        />
+        {error && <p className="error-message">{error}</p>}
 
-        <br />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-        />
-
-        <br />
-
-        <button type="submit">
-          Register
-        </button>
-      </form>
-
-      {error && <p>{error}</p>}
-
-      <p>
-        Already have an account? <Link to="/">Login</Link>
-      </p>
+        <p>
+          Already have an account? <Link to="/">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }

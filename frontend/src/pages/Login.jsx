@@ -39,43 +39,35 @@ function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <h1>Login</h1>
 
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+          />
 
-        <div>
-          <h1>Login</h1>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+          />
 
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={form.username}
-              onChange={handleChange}
-            />
+          <button type="submit">
+            Login
+          </button>
+        </form>
 
-            <br />
+        {error && <p className="error-message">{error}</p>}
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-            />
-
-            <br />
-
-            <button type="submit">
-              Login
-            </button>
-          </form>
-
-          {error && <p>{error}</p>}
-
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </div>
+        <p>
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </div>
     </div>
   );

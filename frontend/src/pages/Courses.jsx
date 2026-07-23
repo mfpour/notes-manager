@@ -60,43 +60,48 @@ function Courses() {
   return (
     <MainLayout>
       <div>
-        <h1>Courses</h1>
+        <h1 className="page-title">Courses</h1>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Course title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <div className="card">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Course title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-          <button type="submit">
-            {editingId ? "Update Course" : "Add Course"}
-          </button>
-        </form>
-
-        <hr />
+            <button type="submit">
+              {editingId ? "Update Course" : "Add Course"}
+            </button>
+          </form>
+        </div>
 
         {courses.length === 0 ? (
-          <p>No courses found.</p>
+          <div className="empty-state">No courses found.</div>
         ) : (
-          <ul>
+          <div className="grid grid-2">
             {courses.map((course) => (
               <div className="course-card" key={course.id}>
-                {course.title}
-                <div className="actions">
-                  <button onClick={() => handleEdit(course)}>
+                <h3>{course.title}</h3>
+                <div className="list-actions">
+                  <button
+                    className="btn-edit"
+                    onClick={() => handleEdit(course)}
+                  >
                     Edit
                   </button>
-                </div>
-                <div className="actions">
-                  <button onClick={() => handleDelete(course.id)}>
+
+                  <button
+                    className="btn-delete"
+                    onClick={() => handleDelete(course.id)}
+                  >
                     Delete
                   </button>
                 </div>
               </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </MainLayout>

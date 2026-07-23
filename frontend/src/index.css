@@ -209,8 +209,18 @@ ul {
 .page-title {
   font-size: 28px;
   font-weight: 700;
-  color: #1e293b;
+  color: #0f172a;
   margin-bottom: 25px;
+}
+
+.page-title::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 999px;
+  margin-top: 10px;
 }
 
 .card {
@@ -678,23 +688,6 @@ img {
   .sidebar-title {
     text-align: center;
   }
-
-.page-title {
-  font-size: 34px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 30px;
-}
-
-.page-title::after {
-  content: "";
-  display: block;
-  width: 70px;
-  height: 4px;
-  background: #2563eb;
-  border-radius: 999px;
-  margin-top: 10px;
-}
 
   .navbar-logo {
     width: 100%;

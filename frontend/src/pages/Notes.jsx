@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
 import { useSearchParams } from "react-router-dom";
+import MDEditor from "@uiw/react-md-editor";
+import ReactMarkdown from "react-markdown";
 
 function Notes() {
   const [notes, setNotes] = useState([]);
@@ -115,6 +117,7 @@ function Notes() {
       const url = window.URL.createObjectURL(response.data);
 
       const link = document.createElement("a");
+
       link.href = url;
       link.download = note.file.split("/").pop();
 
@@ -133,88 +136,105 @@ function Notes() {
   return (
     <MainLayout>
       <div>
-        <h1>Notes</h1>
+        <h1 className="page-title">Notes</h1>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <div className="card">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-          <textarea
-            placeholder="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+            <select
+              value={course}
+              onChange={(e) => setCourse(e.target.value)}
+            >
+              <option value="">Select Course</option>
 
-          <select
-            value={course}
-            onChange={(e) => setCourse(e.target.value)}
-          >
-            <option value="">Select Course</option>
+              {courses.map((course) => (
+                <option
+                  key={course.id}
+                  value={course.id}
+                >
+                  {course.title}
+                </option>
+              ))}
+            </select>
 
-            {courses.map((course) => (
-              <option
-                key={course.id}
-                value={course.id}
-              >
-                {course.title}
-              </option>
-            ))}
-          </select>
+            <div data-color-mode="light">
+              <MDEditor
+                value={content}
+                onChange={(value) => setContent(value || "")}
+                height={300}
+              />
+            </div>
 
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
 
-          <button type="submit">
-            {editingId ? "Update Note" : "Add Note"}
-          </button>
-        </form>
-
-        <hr />
+            <button type="submit">
+              {editingId ? "Update Note" : "Add Note"}
+            </button>
+          </form>
+        </div>
 
         {notes.length === 0 ? (
-          <p>No notes found.</p>
+          <div className="empty-state">No notes found.</div>
         ) : (
-          notes.map((note) => (
-            <div
-              className="note-card"
-              key={note.id}
-            >
-              <h3>{note.title}</h3>
+          <div className="grid grid-2">
+            {notes.map((note) => (
+              <div
+                className="note-card"
+                key={note.id}
+              >
+                <h3>{note.title}</h3>
 
-              <p>{note.content}</p>
-
-              {note.file && (
-                <button
-                  type="button"
-                  onClick={() => handleDownload(note)}
+                <div
+                  style={{
+                    background: "#fff",
+                    padding: "18px",
+                    borderRadius: "10px",
+                    margin: "15px 0",
+                  }}
                 >
-                  Download File
-                </button>
-              )}
+                  <ReactMarkdown>
+                    {note.content}
+                  </ReactMarkdown>
+                </div>
 
-              <div className="actions">
-                <button
-                  type="button"
-                  onClick={() => handleEdit(note)}
-                >
-                  Edit
-                </button>
+                {note.file && (
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(note)}
+                  >
+                    Download File
+                  </button>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => handleDelete(note.id)}
-                >
-                  Delete
-                </button>
+                <div className="list-actions">
+                  <button
+                    type="button"
+                    className="btn-edit"
+                    onClick={() => handleEdit(note)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-delete"
+                    onClick={() => handleDelete(note.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </MainLayout>

@@ -3,27 +3,17 @@ import Sidebar from "../components/Sidebar";
 
 function MainLayout({ children }) {
   return (
-    <>
-      <Navbar />
+    <div className="layout">
+      <Sidebar />
 
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
-        <Sidebar />
+      <div className="main">
+        <Navbar />
 
-        <main
-          style={{
-            flex: 1,
-          }}
-        >
-          {children}
+        <main className="content">
+          <div className="container">{children}</div>
         </main>
       </div>
-    </>
+    </div>
   );
 }
 
