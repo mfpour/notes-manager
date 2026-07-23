@@ -199,3 +199,17 @@ hr {
     padding: 15px;
   }
 }
+
+.active-folder {
+  background: #dbeafe !important;
+  color: #2563eb !important;
+  font-weight: bold;
+}
+
+aside h3 {
+  color: #374151;
+}
+
+aside hr {
+  margin: 15px 0;
+}
