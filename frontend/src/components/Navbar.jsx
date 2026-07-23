@@ -20,7 +20,7 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-logo">
-        📚 Academic Notes
+        📚 Notes Manager
       </div>
 
       <nav className="navbar-links">

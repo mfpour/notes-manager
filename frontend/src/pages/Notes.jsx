@@ -15,9 +15,9 @@ function Notes() {
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-  fetchCourses();
-  fetchNotes();
-}, [searchParams]);
+    fetchCourses();
+    fetchNotes();
+  }, [searchParams]);
 
   const fetchCourses = async () => {
     try {
@@ -29,20 +29,20 @@ function Notes() {
   };
 
   const fetchNotes = async () => {
-  try {
-    const courseId = searchParams.get("course");
+    try {
+      const courseId = searchParams.get("course");
 
-    const url = courseId
-      ? `/notes/?course=${courseId}`
-      : "/notes/";
+      const url = courseId
+        ? `/notes/?course=${courseId}`
+        : "/notes/";
 
-    const response = await api.get(url);
+      const response = await api.get(url);
 
-    setNotes(response.data);
-  } catch (error) {
-    console.log(error.response?.data);
-  }
-};
+      setNotes(response.data);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
 
   const resetForm = () => {
     setTitle("");
@@ -106,8 +106,8 @@ function Notes() {
   };
 
   return (
-      <MainLayout>
-        <div>
+    <MainLayout>
+      <div>
         <h1>Notes</h1>
 
         <form onSubmit={handleSubmit}>
@@ -162,8 +162,8 @@ function Notes() {
         ) : (
           <ul>
             {notes.map((note) => (
-              
-              <li key={note.id}>
+
+              <div className="note-card" key={note.id}>
                 <h3>{note.title}</h3>
                 <p>{note.file}</p>
 
@@ -180,17 +180,18 @@ function Notes() {
                 )}
 
                 <br />
-
-                <button onClick={() => handleEdit(note)}>
-                  Edit
-                </button>
-
-                <button onClick={() => handleDelete(note.id)}>
-                  Delete
-                </button>
-
+                <div className="actions">
+                  <button onClick={() => handleEdit(note)}>
+                    Edit
+                  </button>
+                </div>
+                <div className="actions">
+                  <button onClick={() => handleDelete(note.id)}>
+                    Delete
+                  </button>
+                </div>
                 <hr />
-              </li>
+              </div>
             ))}
           </ul>
         )}

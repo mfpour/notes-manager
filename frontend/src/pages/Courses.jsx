@@ -82,17 +82,19 @@ function Courses() {
         ) : (
           <ul>
             {courses.map((course) => (
-              <li key={course.id}>
+              <div className="course-card" key={course.id}>
                 {course.title}
-
-                <button onClick={() => handleEdit(course)}>
-                  Edit
-                </button>
-
-                <button onClick={() => handleDelete(course.id)}>
-                  Delete
-                </button>
-              </li>
+                <div className="actions">
+                  <button onClick={() => handleEdit(course)}>
+                    Edit
+                  </button>
+                </div>
+                <div className="actions">
+                  <button onClick={() => handleDelete(course.id)}>
+                    Delete
+                  </button>
+                </div>
+              </div>
             ))}
           </ul>
         )}
