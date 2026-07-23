@@ -13,7 +13,16 @@ class NoteViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
-        return Note.objects.filter(course__owner=self.request.user)
+        queryset = Note.objects.filter(
+            course__owner=self.request.user
+        )
+
+        course = self.request.query_params.get("course")
+
+        if course:
+            queryset = queryset.filter(course=course)
+
+        return queryset
 
     def perform_create(self, serializer):
         course = serializer.validated_data["course"]

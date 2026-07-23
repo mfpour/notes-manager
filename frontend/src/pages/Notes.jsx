@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import MainLayout from "../layouts/MainLayout";
+import { useSearchParams } from "react-router-dom";
 
 function Notes() {
   const [notes, setNotes] = useState([]);
   const [courses, setCourses] = useState([]);
-
+  const [searchParams] = useSearchParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [course, setCourse] = useState("");
@@ -14,9 +15,9 @@ function Notes() {
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    fetchCourses();
-    fetchNotes();
-  }, []);
+  fetchCourses();
+  fetchNotes();
+}, [searchParams]);
 
   const fetchCourses = async () => {
     try {
@@ -28,13 +29,20 @@ function Notes() {
   };
 
   const fetchNotes = async () => {
-    try {
-      const response = await api.get("/notes/");
-      setNotes(response.data);
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-  };
+  try {
+    const courseId = searchParams.get("course");
+
+    const url = courseId
+      ? `/notes/?course=${courseId}`
+      : "/notes/";
+
+    const response = await api.get(url);
+
+    setNotes(response.data);
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
 
   const resetForm = () => {
     setTitle("");
