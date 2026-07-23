@@ -8,6 +8,7 @@ function Notes() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [course, setCourse] = useState("");
+  const [file, setFile] = useState(null);
 
   const [editingId, setEditingId] = useState(null);
 
@@ -38,25 +39,38 @@ function Notes() {
     setTitle("");
     setContent("");
     setCourse("");
+    setFile(null);
     setEditingId(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !course) return;
+    if (!title || !course) return;
 
-    const data = {
-      title,
-      content,
-      course,
-    };
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("course", course);
+
+    if (file) {
+      formData.append("file", file);
+    }
 
     try {
       if (editingId) {
-        await api.put(`/notes/${editingId}/`, data);
+        await api.put(`/notes/${editingId}/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       } else {
-        await api.post("/notes/", data);
+        await api.post("/notes/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
 
       resetForm();
@@ -89,7 +103,7 @@ function Notes() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Note title"
+          placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -108,19 +122,21 @@ function Notes() {
           value={course}
           onChange={(e) => setCourse(e.target.value)}
         >
-          <option value="">
-            Select Course
-          </option>
+          <option value="">Select Course</option>
 
           {courses.map((course) => (
-            <option
-              key={course.id}
-              value={course.id}
-            >
+            <option key={course.id} value={course.id}>
               {course.title}
             </option>
           ))}
         </select>
+
+        <br />
+
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
 
         <br />
 
@@ -136,14 +152,21 @@ function Notes() {
       ) : (
         <ul>
           {notes.map((note) => (
+            
             <li key={note.id}>
-              <strong>{note.title}</strong>
+              <h3>{note.title}</h3>
+              <p>{note.file}</p>
 
-              {note.content && (
-                <>
-                  <br />
-                  {note.content}
-                </>
+              <p>{note.content}</p>
+
+              {note.file && (
+                <a
+                  href={`http://127.0.0.1:8000${note.file}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Download File
+                </a>
               )}
 
               <br />

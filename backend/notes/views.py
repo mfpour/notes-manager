@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import MultiPartParser, FormParser
 
-from courses.models import Course
 from .models import Note
 from .serializers import NoteSerializer
 
@@ -10,6 +10,7 @@ from .serializers import NoteSerializer
 class NoteViewSet(viewsets.ModelViewSet):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         return Note.objects.filter(course__owner=self.request.user)
