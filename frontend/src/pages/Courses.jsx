@@ -4,6 +4,7 @@ import api from "../api/axios";
 function Courses() {
   const [courses, setCourses] = useState([]);
   const [title, setTitle] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     fetchCourses();
@@ -24,11 +25,32 @@ function Courses() {
     if (!title.trim()) return;
 
     try {
-      await api.post("/courses/", {
-        title: title.trim(),
-      });
+      if (editingId) {
+        await api.put(`/courses/${editingId}/`, {
+          title,
+        });
+      } else {
+        await api.post("/courses/", {
+          title,
+        });
+      }
 
       setTitle("");
+      setEditingId(null);
+      fetchCourses();
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  const handleEdit = (course) => {
+    setTitle(course.title);
+    setEditingId(course.id);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/courses/${id}/`);
       fetchCourses();
     } catch (error) {
       console.log(error.response?.data);
@@ -48,7 +70,7 @@ function Courses() {
         />
 
         <button type="submit">
-          Add Course
+          {editingId ? "Update Course" : "Add Course"}
         </button>
       </form>
 
@@ -60,21 +82,15 @@ function Courses() {
         <ul>
           {courses.map((course) => (
             <li key={course.id}>
-              <strong>{course.title}</strong>
+              {course.title}
 
-              {course.semester && (
-                <>
-                  {" "}
-                  - {course.semester}
-                </>
-              )}
+              <button onClick={() => handleEdit(course)}>
+                Edit
+              </button>
 
-              {course.description && (
-                <>
-                  <br />
-                  {course.description}
-                </>
-              )}
+              <button onClick={() => handleDelete(course.id)}>
+                Delete
+              </button>
             </li>
           ))}
         </ul>
