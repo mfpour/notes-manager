@@ -28,7 +28,9 @@ class NoteViewSet(viewsets.ModelViewSet):
         course = serializer.validated_data["course"]
 
         if course.owner != self.request.user:
-            raise PermissionDenied("You do not have permission to use this course.")
+            raise PermissionDenied(
+                "You do not have permission to use this course."
+            )
 
         serializer.save()
 
@@ -39,6 +41,14 @@ class NoteViewSet(viewsets.ModelViewSet):
         )
 
         if course.owner != self.request.user:
-            raise PermissionDenied("You do not have permission to use this course.")
+            raise PermissionDenied(
+                "You do not have permission to use this course."
+            )
 
         serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.file:
+            instance.file.delete(save=False)
+
+        instance.delete()

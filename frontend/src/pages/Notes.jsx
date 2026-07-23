@@ -7,6 +7,7 @@ function Notes() {
   const [notes, setNotes] = useState([]);
   const [courses, setCourses] = useState([]);
   const [searchParams] = useSearchParams();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [course, setCourse] = useState("");
@@ -105,6 +106,30 @@ function Notes() {
     }
   };
 
+  const handleDownload = async (note) => {
+    try {
+      const response = await api.get(note.file, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(response.data);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = note.file.split("/").pop();
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <MainLayout>
       <div>
@@ -118,15 +143,11 @@ function Notes() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <br />
-
           <textarea
             placeholder="Content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-
-          <br />
 
           <select
             value={course}
@@ -135,20 +156,19 @@ function Notes() {
             <option value="">Select Course</option>
 
             {courses.map((course) => (
-              <option key={course.id} value={course.id}>
+              <option
+                key={course.id}
+                value={course.id}
+              >
                 {course.title}
               </option>
             ))}
           </select>
 
-          <br />
-
           <input
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
           />
-
-          <br />
 
           <button type="submit">
             {editingId ? "Update Note" : "Add Note"}
@@ -160,40 +180,41 @@ function Notes() {
         {notes.length === 0 ? (
           <p>No notes found.</p>
         ) : (
-          <ul>
-            {notes.map((note) => (
+          notes.map((note) => (
+            <div
+              className="note-card"
+              key={note.id}
+            >
+              <h3>{note.title}</h3>
 
-              <div className="note-card" key={note.id}>
-                <h3>{note.title}</h3>
-                <p>{note.file}</p>
+              <p>{note.content}</p>
 
-                <p>{note.content}</p>
+              {note.file && (
+                <button
+                  type="button"
+                  onClick={() => handleDownload(note)}
+                >
+                  Download File
+                </button>
+              )}
 
-                {note.file && (
-                  <a
-                    href={`http://127.0.0.1:8000${note.file}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Download File
-                  </a>
-                )}
+              <div className="actions">
+                <button
+                  type="button"
+                  onClick={() => handleEdit(note)}
+                >
+                  Edit
+                </button>
 
-                <br />
-                <div className="actions">
-                  <button onClick={() => handleEdit(note)}>
-                    Edit
-                  </button>
-                </div>
-                <div className="actions">
-                  <button onClick={() => handleDelete(note.id)}>
-                    Delete
-                  </button>
-                </div>
-                <hr />
+                <button
+                  type="button"
+                  onClick={() => handleDelete(note.id)}
+                >
+                  Delete
+                </button>
               </div>
-            ))}
-          </ul>
+            </div>
+          ))
         )}
       </div>
     </MainLayout>
