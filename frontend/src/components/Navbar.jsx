@@ -5,17 +5,23 @@ function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try {
+  try {
+    const refresh = localStorage.getItem("refresh");
+
+    if (refresh) {
       await api.post("/accounts/logout/", {
-        refresh: localStorage.getItem("refresh"),
+        refresh,
       });
-    } catch {}
+    }
+  } catch (error) {
+    console.log(error.response?.data);
+  }
 
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
+  localStorage.removeItem("access");
+  localStorage.removeItem("refresh");
 
-    navigate("/login");
-  };
+  navigate("/");
+};
 
   return (
     <header className="navbar">
