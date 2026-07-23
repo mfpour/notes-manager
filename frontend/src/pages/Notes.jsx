@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import MainLayout from "../layouts/MainLayout";
 
 function Notes() {
   const [notes, setNotes] = useState([]);
@@ -97,94 +98,96 @@ function Notes() {
   };
 
   return (
-    <div>
-      <h1>Notes</h1>
+      <MainLayout>
+        <div>
+        <h1>Notes</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <br />
+          <br />
 
-        <textarea
-          placeholder="Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+          <textarea
+            placeholder="Content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
 
-        <br />
+          <br />
 
-        <select
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-        >
-          <option value="">Select Course</option>
+          <select
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
+          >
+            <option value="">Select Course</option>
 
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.title}
-            </option>
-          ))}
-        </select>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
 
-        <br />
+          <br />
 
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
 
-        <br />
+          <br />
 
-        <button type="submit">
-          {editingId ? "Update Note" : "Add Note"}
-        </button>
-      </form>
+          <button type="submit">
+            {editingId ? "Update Note" : "Add Note"}
+          </button>
+        </form>
 
-      <hr />
+        <hr />
 
-      {notes.length === 0 ? (
-        <p>No notes found.</p>
-      ) : (
-        <ul>
-          {notes.map((note) => (
-            
-            <li key={note.id}>
-              <h3>{note.title}</h3>
-              <p>{note.file}</p>
+        {notes.length === 0 ? (
+          <p>No notes found.</p>
+        ) : (
+          <ul>
+            {notes.map((note) => (
+              
+              <li key={note.id}>
+                <h3>{note.title}</h3>
+                <p>{note.file}</p>
 
-              <p>{note.content}</p>
+                <p>{note.content}</p>
 
-              {note.file && (
-                <a
-                  href={`http://127.0.0.1:8000${note.file}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Download File
-                </a>
-              )}
+                {note.file && (
+                  <a
+                    href={`http://127.0.0.1:8000${note.file}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Download File
+                  </a>
+                )}
 
-              <br />
+                <br />
 
-              <button onClick={() => handleEdit(note)}>
-                Edit
-              </button>
+                <button onClick={() => handleEdit(note)}>
+                  Edit
+                </button>
 
-              <button onClick={() => handleDelete(note.id)}>
-                Delete
-              </button>
+                <button onClick={() => handleDelete(note.id)}>
+                  Delete
+                </button>
 
-              <hr />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+                <hr />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </MainLayout>
   );
 }
 

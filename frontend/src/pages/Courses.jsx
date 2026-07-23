@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import MainLayout from "../layouts/MainLayout";
 function Courses() {
   const [courses, setCourses] = useState([]);
   const [title, setTitle] = useState("");
@@ -58,44 +58,46 @@ function Courses() {
   };
 
   return (
-    <div>
-      <h1>Courses</h1>
+    <MainLayout>
+      <div>
+        <h1>Courses</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Course title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Course title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <button type="submit">
-          {editingId ? "Update Course" : "Add Course"}
-        </button>
-      </form>
+          <button type="submit">
+            {editingId ? "Update Course" : "Add Course"}
+          </button>
+        </form>
 
-      <hr />
+        <hr />
 
-      {courses.length === 0 ? (
-        <p>No courses found.</p>
-      ) : (
-        <ul>
-          {courses.map((course) => (
-            <li key={course.id}>
-              {course.title}
+        {courses.length === 0 ? (
+          <p>No courses found.</p>
+        ) : (
+          <ul>
+            {courses.map((course) => (
+              <li key={course.id}>
+                {course.title}
 
-              <button onClick={() => handleEdit(course)}>
-                Edit
-              </button>
+                <button onClick={() => handleEdit(course)}>
+                  Edit
+                </button>
 
-              <button onClick={() => handleDelete(course.id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+                <button onClick={() => handleDelete(course.id)}>
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </MainLayout>
   );
 }
 
