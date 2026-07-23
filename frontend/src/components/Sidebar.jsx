@@ -3,82 +3,103 @@ import { Link, useLocation } from "react-router-dom";
 import api from "../api/axios";
 
 function Sidebar() {
-    const [courses, setCourses] = useState([]);
-    const location = useLocation();
+  const [courses, setCourses] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [openFolders, setOpenFolders] = useState({});
 
-    useEffect(() => {
-        fetchCourses();
-    }, []);
+  const location = useLocation();
 
-    const fetchCourses = async () => {
-        try {
-            const response = await api.get("/courses/");
-            setCourses(response.data);
-        } catch (error) {
-            console.log(error.response?.data);
-        }
-    };
+  useEffect(() => {
+    fetchCourses();
+    fetchNotes();
+  }, []);
 
-    const activeCourse = new URLSearchParams(location.search).get("course");
+  const fetchCourses = async () => {
+    try {
+      const response = await api.get("/courses/");
+      setCourses(response.data);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
 
-    return (
-        <aside>
-            <h3 style={{ marginBottom: "20px" }}>
-                📁 File Explorer
-            </h3>
+  const fetchNotes = async () => {
+    try {
+      const response = await api.get("/notes/");
+      setNotes(response.data);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
 
-            <ul>
-                <li>
-                    <Link to="/dashboard">
-                        🏠 Dashboard
-                    </Link>
-                </li>
+  const toggleFolder = (id) => {
+    setOpenFolders((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
-                <li>
-                    <Link to="/courses">
-                        📚 Manage Courses
-                    </Link>
-                </li>
+  const activeCourse =
+    new URLSearchParams(location.search).get("course");
 
-                <hr />
+  return (
+    <aside className="sidebar">
+      <h2 className="sidebar-title">
+        📁 File Explorer
+      </h2>
 
-                {courses.map((course) => (
-                    <li key={course.id}>
-                        <Link
-                            to={`/notes?course=${course.id}`}
-                            className={
-                                activeCourse === String(course.id)
-                                    ? "active-folder"
-                                    : ""
-                            }
-                        >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    width: "100%",
-                                }}
-                            >
-                                <span>📁 {course.title}</span>
+      <div className="sidebar-menu">
+        <Link to="/dashboard">
+          🏠 Dashboard
+        </Link>
 
-                                <span
-                                    style={{
-                                        background: "#2563eb",
-                                        color: "white",
-                                        borderRadius: "20px",
-                                        padding: "2px 8px",
-                                        fontSize: "12px",
-                                    }}
-                                >
-                                    {course.notes_count}
-                                </span>
-                            </div>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </aside>
-    );
+        <Link to="/courses">
+          📚 Courses
+        </Link>
+      </div>
+
+      <div className="sidebar-divider" />
+
+      {courses.map((course) => (
+        <div key={course.id}>
+          <div
+            className={`folder ${
+              activeCourse === String(course.id)
+                ? "active-folder"
+                : ""
+            }`}
+            onClick={() => toggleFolder(course.id)}
+          >
+            <span>
+              {openFolders[course.id]
+                ? "📂"
+                : "📁"}{" "}
+              {course.title}
+            </span>
+
+            <span className="badge">
+              {course.notes_count}
+            </span>
+          </div>
+
+          {openFolders[course.id] &&
+            notes
+              .filter(
+                (note) => note.course === course.id
+              )
+              .map((note) => (
+                <Link
+                  key={note.id}
+                  className="note-item"
+                  to={`/notes?course=${course.id}`}
+                >
+                  📄 {note.title}
+                </Link>
+              ))}
+        </div>
+      ))}
+    </aside>
+  );
 }
 
 export default Sidebar;

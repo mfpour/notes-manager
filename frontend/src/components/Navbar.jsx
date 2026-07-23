@@ -6,7 +6,9 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await api.post("/accounts/logout/");
+      await api.post("/accounts/logout/", {
+        refresh: localStorage.getItem("refresh"),
+      });
     } catch {}
 
     localStorage.removeItem("access");
@@ -16,15 +18,24 @@ function Navbar() {
   };
 
   return (
-    <nav>
-      <Link to="/dashboard">Dashboard</Link>{" | "}
-      <Link to="/courses">Courses</Link>{" | "}
-      <Link to="/notes">Notes</Link>{" | "}
+    <header className="navbar">
+      <div className="navbar-logo">
+        📚 Academic Notes
+      </div>
 
-      <button onClick={handleLogout}>
+      <nav className="navbar-links">
+        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/courses">Courses</Link>
+        <Link to="/notes">Notes</Link>
+      </nav>
+
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+      >
         Logout
       </button>
-    </nav>
+    </header>
   );
 }
 

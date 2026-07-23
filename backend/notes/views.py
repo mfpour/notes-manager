@@ -15,12 +15,12 @@ class NoteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Note.objects.filter(
             course__owner=self.request.user
-        )
+        ).select_related("course")
 
-        course = self.request.query_params.get("course")
+        course_id = self.request.query_params.get("course")
 
-        if course:
-            queryset = queryset.filter(course=course)
+        if course_id:
+            queryset = queryset.filter(course_id=course_id)
 
         return queryset
 
