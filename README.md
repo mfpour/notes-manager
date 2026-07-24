@@ -1,12 +1,11 @@
 # Notes Manager
 
-
 ## What it does
 
 ### Auth
 - Register / Login
 - JWT authentication
-- Logout (properly clears the session)
+- Logout
 
 ### Courses
 - Create / edit / delete courses
@@ -15,23 +14,22 @@
 ### Notes
 - Create / edit / delete notes
 - Each note belongs to a course
-- You can filter notes by course
+- Filter notes by course
 
 ### Files
 - Upload a file to a note
-- Download it later
-- If you delete the note, the file gets deleted too (didn't want leftover junk in the media folder)
+- Download attached files
+- Automatically remove uploaded files when the related note is deleted
 
 ### Markdown editor
-- Notes are written in Markdown
-- There's a live preview while typing
-- When you open a saved note it renders properly instead of showing raw text
+- Write notes using Markdown
+- Live preview while typing
+- Render Markdown correctly when viewing saved notes
 
 ### UI
 - Dashboard
-- Sidebar to browse courses
-- Navbar
-- Tried to make it responsive, works okay on smaller screens too
+- Sidebar navigation
+- Responsive layout
 
 ---
 
@@ -40,6 +38,8 @@
 **Backend:** Python, Django, Django REST Framework, Simple JWT, SQLite
 
 **Frontend:** React, React Router, Axios, React Markdown, UIW Markdown Editor
+
+**Containerization:** Docker, Docker Compose
 
 ---
 
@@ -52,6 +52,7 @@ backend/
     notes/
     media/
     config/
+    Dockerfile
 
 frontend/
     src/
@@ -59,6 +60,9 @@ frontend/
         layouts/
         pages/
         components/
+    Dockerfile
+
+docker-compose.yml
 ```
 
 ---
@@ -68,60 +72,49 @@ frontend/
 ### Clone
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/academic-notes-manager.git
+git clone https://github.com/mfpour/notes-manager
+cd notes-manager
 ```
 
-### Backend
+### Run with Docker
 
-Make a virtual environment first:
+Make sure Docker Desktop is installed and running.
 
 ```bash
-python -m venv .venv
+docker compose up --build
 ```
 
-Activate it.
+After the containers start:
 
-Windows:
-```bash
-.venv\Scripts\activate
-```
+- Frontend: http://localhost:5173
+- Backend: http://127.0.0.1:8000
 
-Linux / macOS:
-```bash
-source .venv/bin/activate
-```
-
-Install requirements and run migrations:
+To stop the project:
 
 ```bash
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
-### Frontend
-
-```bash
-npm install
-npm run dev
+docker compose down
 ```
 
 ---
 
-## URLs
+## API 
 
-- Frontend: `http://localhost:5173`
-- Backend: `http://127.0.0.1:8000`
+**Auth**
+- Register
+- Login
+- Logout
 
----
+**Courses**
+- GET
+- POST
+- PUT
+- DELETE
 
-## API (quick overview)
-
-**Auth:** register, login, logout
-
-**Courses:** GET, POST, PUT, DELETE
-
-**Notes:** GET, POST, PUT, DELETE
+**Notes**
+- GET
+- POST
+- PUT
+- DELETE
 
 ---
 
@@ -132,4 +125,3 @@ npm run dev
 - Dashboard
 - Courses
 - Notes
-
