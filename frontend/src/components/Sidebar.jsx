@@ -50,11 +50,11 @@ function Sidebar() {
 
       <div className="sidebar-menu">
         <Link to="/dashboard">
-          🏠 Dashboard
+          Dashboard
         </Link>
 
         <Link to="/courses">
-          📚 Courses
+           Courses
         </Link>
       </div>
 
